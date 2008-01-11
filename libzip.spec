@@ -3,7 +3,7 @@
 
 Name:           libzip
 Version:        0.8
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        C library for reading, creating, and modifying zip archives
 
 Group:          System Environment/Libraries
@@ -12,6 +12,7 @@ URL:            http://www.nih.at/libzip/index.html
 Source0:        http://www.nih.at/libzip/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRequires:  automake libtool
 BuildRequires:  zlib-devel >= 1.2.2
 
 %description
@@ -34,10 +35,11 @@ developing applications that use %{name}.
 %prep
 %setup -q
 
-# Avoid lib64 rpaths
-%if "%{_libdir}" != "/usr/lib"
-sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
-%endif
+# Avoid lib64 rpaths (FIXME: recheck this on newer releases)
+#if "%{_libdir}" != "/usr/lib"
+#sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
+autoreconf
+#endif
 
 
 %build
@@ -76,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Fri Jan 11 2008 Rex Dieter <rdieter[AT]fedoraproject.org> 0.8-4
+- use better workaround for removing rpaths
+
 * Wed Nov 20 2007 Sebastian Vahl <fedora@deadbabylon.de> 0.8-3
 - require pkgconfig in devel subpkg
 - move api description to devel subpkg
