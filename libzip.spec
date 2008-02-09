@@ -3,7 +3,7 @@
 
 Name:           libzip
 Version:        0.8
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        C library for reading, creating, and modifying zip archives
 
 Group:          System Environment/Libraries
@@ -78,6 +78,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat Feb 09 2008 Sebastian Vahl <fedora@deadbabylon.de> 0.8-5
+- rebuild for new gcc-4.3
+
 * Fri Jan 11 2008 Rex Dieter <rdieter[AT]fedoraproject.org> 0.8-4
 - use better workaround for removing rpaths
 
