@@ -2,8 +2,8 @@
 # https://bugzilla.redhat.com/show_bug.cgi?id=393041
 
 Name:           libzip
-Version:        0.8
-Release:        5%{?dist}
+Version:        0.9
+Release:        1%{?dist}
 Summary:        C library for reading, creating, and modifying zip archives
 
 Group:          System Environment/Libraries
@@ -13,6 +13,7 @@ Source0:        http://www.nih.at/libzip/%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  automake libtool
+BuildRequires:  pkgconfig
 BuildRequires:  zlib-devel >= 1.2.2
 
 %description
@@ -38,7 +39,7 @@ developing applications that use %{name}.
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
 #if "%{_libdir}" != "/usr/lib"
 #sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
-autoreconf
+autoreconf -f -i
 #endif
 
 
@@ -65,19 +66,24 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS NEWS README THANKS TODO
-%{_bindir}/*
-%{_libdir}/*.so.*
+%{_bindir}/zipcmp
+%{_bindir}/zipmerge
+%{_bindir}/ziptorrent
+%{_libdir}/libzip.so.1*
 %{_mandir}/man1/*zip*
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/*
-%{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_includedir}/zip.h
+%{_libdir}/libzip.so
+%{_libdir}/pkgconfig/libzip.pc
 %{_mandir}/man3/*zip*
 
 
 %changelog
+* Fri Dec 12 2008 Rex Dieter <rdieter@fedoraproject.org> 0.9-1
+- libzip-0.9
+
 * Sat Feb 09 2008 Sebastian Vahl <fedora@deadbabylon.de> 0.8-5
 - rebuild for new gcc-4.3
 
