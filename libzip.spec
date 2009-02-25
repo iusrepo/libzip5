@@ -3,7 +3,7 @@
 
 Name:           libzip
 Version:        0.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        C library for reading, creating, and modifying zip archives
 
 Group:          System Environment/Libraries
@@ -81,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Fri Dec 12 2008 Rex Dieter <rdieter@fedoraproject.org> 0.9-1
 - libzip-0.9
 
