@@ -3,13 +3,13 @@
 
 Name:           libzip
 Version:        0.9
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        C library for reading, creating, and modifying zip archives
 
 Group:          System Environment/Libraries
 License:        BSD
 URL:            http://www.nih.at/libzip/index.html
-Source0:        http://www.nih.at/libzip/%{name}-%{version}.tar.gz
+Source0:        http://www.nih.at/libzip/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  automake libtool
@@ -81,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Aug 11 2009 Ville Skyttä <ville.skytta@iki.fi> - 0.9-4
+- Use bzipped upstream tarball.
+
 * Sat Jul 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_12_Mass_Rebuild
 
