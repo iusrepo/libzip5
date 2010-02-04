@@ -2,8 +2,8 @@
 # https://bugzilla.redhat.com/show_bug.cgi?id=393041
 
 Name:           libzip
-Version:        0.9
-Release:        4%{?dist}
+Version:        0.9.3
+Release:        1%{?dist}
 Summary:        C library for reading, creating, and modifying zip archives
 
 Group:          System Environment/Libraries
@@ -81,6 +81,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb 04 2010 Kalev Lember <kalev@smartlink.ee> - 0.9.3-1
+- Updated to libzip 0.9.3
+
 * Tue Aug 11 2009 Ville Skyttä <ville.skytta@iki.fi> - 0.9-4
 - Use bzipped upstream tarball.
 
