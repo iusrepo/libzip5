@@ -3,7 +3,7 @@
 
 Name:           libzip
 Version:        0.9.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        C library for reading, creating, and modifying zip archives
 
 Group:          System Environment/Libraries
@@ -13,8 +13,7 @@ Source0:        http://www.nih.at/libzip/%{name}-%{version}.tar.bz2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  automake libtool
-BuildRequires:  pkgconfig
-BuildRequires:  zlib-devel >= 1.2.2
+BuildRequires:  zlib-devel
 
 %description
 libzip is a C library for reading, creating, and modifying zip archives. Files
@@ -26,7 +25,6 @@ The API is documented by man pages.
 Summary: Development files for %{name}
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
-Requires: pkgconfig
 
 %description devel
 The %{name}-devel package contains libraries and header files for
@@ -81,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Feb 04 2010 Kalev Lember <kalev@smartlink.ee> - 0.9.3-2
+- Cleaned up pkgconfig deps which are now automatically handled by RPM.
+
 * Thu Feb 04 2010 Kalev Lember <kalev@smartlink.ee> - 0.9.3-1
 - Updated to libzip 0.9.3
 
