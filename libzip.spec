@@ -2,16 +2,22 @@
 # https://bugzilla.redhat.com/show_bug.cgi?id=393041
 
 Name:           libzip
-Version:        0.9.3
-Release:        4%{?dist}
+Version:        0.10
+Release:        1%{?dist}
 Summary:        C library for reading, creating, and modifying zip archives
 
 Group:          System Environment/Libraries
 License:        BSD
 URL:            http://www.nih.at/libzip/index.html
-Source0:        http://www.nih.at/libzip/%{name}-%{version}.tar.bz2
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Source0:        http://www.nih.at/libzip/libzip-%{version}.tar.bz2
 
+# to handle multiarch headers, ex from mysql-devel package
+Source1:        zipconf.h
+
+# fonctionnal changes from php bundled library
+Patch0:         libzip-0.10-php.patch
+
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  automake libtool
 BuildRequires:  zlib-devel
 
@@ -34,6 +40,8 @@ developing applications that use %{name}.
 %prep
 %setup -q
 
+%patch0 -p1 -b .forphp
+
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
 #if "%{_libdir}" != "/usr/lib"
 #sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
@@ -51,6 +59,11 @@ rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
+# Handle multiarch headers
+mv $RPM_BUILD_ROOT%{_libdir}/libzip/include/zipconf.h \
+   $RPM_BUILD_ROOT%{_includedir}/zipconf_$(uname -i).h
+install -pm 644 %{SOURCE1} $RPM_BUILD_ROOT%{_includedir}/zipconf.h
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -67,18 +80,23 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/zipcmp
 %{_bindir}/zipmerge
 %{_bindir}/ziptorrent
-%{_libdir}/libzip.so.1*
+%{_libdir}/libzip.so.2*
 %{_mandir}/man1/*zip*
 
 %files devel
 %defattr(-,root,root,-)
-%{_includedir}/zip.h
+%{_includedir}/zip*.h
 %{_libdir}/libzip.so
 %{_libdir}/pkgconfig/libzip.pc
 %{_mandir}/man3/*zip*
 
 
 %changelog
+* Sat Feb 04 2012 Remi Collet <remi@fedoraproject.org> - 0.10-1
+- update to 0.10
+- apply patch with changes from php bundled lib (thanks spot)
+- handle multiarch headers (ex from MySQL)
+
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.9.3-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
