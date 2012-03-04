@@ -3,7 +3,7 @@
 
 Name:           libzip
 Version:        0.10
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        C library for reading, creating, and modifying zip archives
 
 Group:          System Environment/Libraries
@@ -60,9 +60,19 @@ make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
 find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
 # Handle multiarch headers
-mv $RPM_BUILD_ROOT%{_libdir}/libzip/include/zipconf.h \
-   $RPM_BUILD_ROOT%{_includedir}/zipconf_$(uname -i).h
-install -pm 644 %{SOURCE1} $RPM_BUILD_ROOT%{_includedir}/zipconf.h
+case `uname -i` in
+  i386 | x86_64 | ppc | ppc64 | s390 | s390x | sparc | sparc64 )
+    # we only apply this to known Fedora multilib arches
+    mv $RPM_BUILD_ROOT%{_libdir}/libzip/include/zipconf.h \
+       $RPM_BUILD_ROOT%{_includedir}/zipconf_$(uname -i).h
+    install -pm 644 %{SOURCE1} $RPM_BUILD_ROOT%{_includedir}/zipconf.h
+    ;;
+  *)
+    # Other arch (ARM, ...)
+    mv $RPM_BUILD_ROOT%{_libdir}/libzip/include/zipconf.h \
+       $RPM_BUILD_ROOT%{_includedir}/zipconf.h
+    ;;
+esac
 
 
 %clean
@@ -92,6 +102,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Mar 04 2012 Remi Collet <remi@fedoraproject.org> - 0.10-2
+- try to fix ARM issue (#799684)
+
 * Sat Feb 04 2012 Remi Collet <remi@fedoraproject.org> - 0.10-1
 - update to 0.10
 - apply patch with changes from php bundled lib (thanks spot)
