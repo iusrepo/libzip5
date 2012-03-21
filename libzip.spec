@@ -2,8 +2,8 @@
 # https://bugzilla.redhat.com/show_bug.cgi?id=393041
 
 Name:           libzip
-Version:        0.10
-Release:        2%{?dist}
+Version:        0.10.1
+Release:        1%{?dist}
 Summary:        C library for reading, creating, and modifying zip archives
 
 Group:          System Environment/Libraries
@@ -102,6 +102,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar 21 2012 Remi Collet <remi@fedoraproject.org> - 0.10.1-1
+- update to 0.10.1 (security fix only)
+- fixes for CVE-2012-1162 and CVE-2012-1163
+
 * Sun Mar 04 2012 Remi Collet <remi@fedoraproject.org> - 0.10-2
 - try to fix ARM issue (#799684)
 
