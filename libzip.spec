@@ -1,25 +1,24 @@
-# Fedora Review Request #393041
-# https://bugzilla.redhat.com/show_bug.cgi?id=393041
 
-Name:           libzip
-Version:        0.10.1
-Release:        1%{?dist}
-Summary:        C library for reading, creating, and modifying zip archives
+%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 
-Group:          System Environment/Libraries
-License:        BSD
-URL:            http://www.nih.at/libzip/index.html
-Source0:        http://www.nih.at/libzip/libzip-%{version}.tar.bz2
+Name:    libzip
+Version: 0.10.1
+Release: 2%{?dist}
+Summary: C library for reading, creating, and modifying zip archives
+
+License: BSD
+URL:     http://www.nih.at/libzip/index.html
+Source0: http://www.nih.at/libzip/libzip-%{version}.tar.bz2
+
+#BuildRequires:  automake libtool
+BuildRequires:  zlib-devel
 
 # to handle multiarch headers, ex from mysql-devel package
-Source1:        zipconf.h
+Source1: zipconf.h
 
 # fonctionnal changes from php bundled library
-Patch0:         libzip-0.10-php.patch
+Patch0: libzip-0.10-php.patch
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildRequires:  automake libtool
-BuildRequires:  zlib-devel
 
 %description
 libzip is a C library for reading, creating, and modifying zip archives. Files
@@ -29,9 +28,7 @@ The API is documented by man pages.
 
 %package devel
 Summary: Development files for %{name}
-Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
-
+Requires: %{name}%{?_isa} = %{version}-%{release}
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
@@ -43,49 +40,42 @@ developing applications that use %{name}.
 %patch0 -p1 -b .forphp
 
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
-#if "%{_libdir}" != "/usr/lib"
-#sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
-autoreconf -f -i
-#endif
+%if "%{_libdir}" != "/usr/lib"
+sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
+#autoreconf -f -i
+%endif
 
 
 %build
-%configure --disable-static
+%configure \
+  --disable-static
+
 make %{?_smp_mflags}
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
-find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
-# Handle multiarch headers
-case `uname -i` in
-  i386 | x86_64 | ppc | ppc64 | s390 | s390x | sparc | sparc64 )
-    # we only apply this to known Fedora multilib arches
-    mv $RPM_BUILD_ROOT%{_libdir}/libzip/include/zipconf.h \
-       $RPM_BUILD_ROOT%{_includedir}/zipconf_$(uname -i).h
-    install -pm 644 %{SOURCE1} $RPM_BUILD_ROOT%{_includedir}/zipconf.h
-    ;;
-  *)
-    # Other arch (ARM, ...)
-    mv $RPM_BUILD_ROOT%{_libdir}/libzip/include/zipconf.h \
-       $RPM_BUILD_ROOT%{_includedir}/zipconf.h
-    ;;
-esac
+make install DESTDIR=%{buildroot} INSTALL='install -p'
 
+## unpackaged files
+rm -fv %{buildroot}%{_libdir}/lib*.la
 
-%clean
-rm -rf $RPM_BUILD_ROOT
+## FIXME: someday fix consumers of libzip to properly handle
+## header @ %%{_libdir}/libzip/include/zipconf.h -- rex
+%ifarch %{multilib_archs}
+cp -alf %{buildroot}%{_libdir}/libzip/include/zipconf.h \
+        %{buildroot}%{_includedir}/zipconf-%{__isa_bits}.h
+install -D -m644 -p %{SOURCE1} %{buildroot}%{_includedir}/zipconf.h
+%else
+cp -alf %{buildroot}%{_libdir}/libzip/include/zipconf.h \
+        %{buildroot}%{_includedir}/zipconf.h
+%endif
 
 
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
 
-
 %files
-%defattr(-,root,root,-)
 %doc AUTHORS NEWS README THANKS TODO
 %{_bindir}/zipcmp
 %{_bindir}/zipmerge
@@ -94,14 +84,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*zip*
 
 %files devel
-%defattr(-,root,root,-)
-%{_includedir}/zip*.h
+%{_includedir}/zip.h
+%{_includedir}/zipconf*.h
+%dir %{_libdir}/libzip
+%{_libdir}/libzip/include
 %{_libdir}/libzip.so
 %{_libdir}/pkgconfig/libzip.pc
 %{_mandir}/man3/*zip*
 
 
 %changelog
+* Tue Jul 10 2012 Rex Dieter <rdieter@fedoraproject.org> 0.10.1-2
+- spec cleanup, better multilib fix
+
 * Wed Mar 21 2012 Remi Collet <remi@fedoraproject.org> - 0.10.1-1
 - update to 0.10.1 (security fix only)
 - fixes for CVE-2012-1162 and CVE-2012-1163

@@ -6,21 +6,18 @@
  *
  * To avoid breaking arches not explicitly supported by Fedora, we
  * use this indirection file *only* on known multilib arches.
- */
-#if defined(__x86_64__)
-#include "zipconf_x86_64.h"
-#elif defined(__i386__)
-#include "zipconf_i386.h"
-#elif defined(__ppc64__) || defined(__powerpc64__)
-#include "zipconf_ppc64.h"
-#elif defined(__ppc__) || defined(__powerpc__)
-#include "zipconf_ppc.h"
-#elif defined(__s390x__)
-#include "zipconf_s390x.h"
-#elif defined(__s390__)
-#include "zipconf_s390.h"
-#elif defined(__sparc__) && defined(__arch64__)
-#include "zipconf_sparc64.h"
-#elif defined(__sparc__)
-#include "zipconf_sparc.h"
+ * DO NOT INCLUDE THE NEW FILE DIRECTLY -- ALWAYS INCLUDE THIS ONE INSTEAD. */
+
+#ifndef ZIPCONF_MULTILIB_H
+#define ZIPCONF_MULTILIB_H
+
+#include <bits/wordsize.h>
+#if __WORDSIZE == 32
+#include "zipconf-32.h"
+#elif __WORDSIZE == 64
+#include "zipconf-64.h"
+#else
+#error "unexpected value for __WORDSIZE macro"
+#endif
+
 #endif
