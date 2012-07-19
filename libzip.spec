@@ -3,7 +3,7 @@
 
 Name:    libzip
 Version: 0.10.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -94,6 +94,9 @@ cp -alf %{buildroot}%{_libdir}/libzip/include/zipconf.h \
 
 
 %changelog
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Tue Jul 10 2012 Rex Dieter <rdieter@fedoraproject.org> 0.10.1-2
 - spec cleanup, better multilib fix
 
