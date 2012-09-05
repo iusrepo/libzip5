@@ -3,7 +3,7 @@
 
 Name:    libzip
 Version: 0.10.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -63,12 +63,12 @@ rm -fv %{buildroot}%{_libdir}/lib*.la
 ## FIXME: someday fix consumers of libzip to properly handle
 ## header @ %%{_libdir}/libzip/include/zipconf.h -- rex
 %ifarch %{multilib_archs}
-cp -alf %{buildroot}%{_libdir}/libzip/include/zipconf.h \
-        %{buildroot}%{_includedir}/zipconf-%{__isa_bits}.h
+ln -s ../%{_lib}/libzip/include/zipconf.h \
+      %{buildroot}%{_includedir}/zipconf-%{__isa_bits}.h
 install -D -m644 -p %{SOURCE1} %{buildroot}%{_includedir}/zipconf.h
 %else
-cp -alf %{buildroot}%{_libdir}/libzip/include/zipconf.h \
-        %{buildroot}%{_includedir}/zipconf.h
+ln -s ../%{_lib}/libzip/include/zipconf.h/libzip/include/zipconf.h \
+      %{buildroot}%{_includedir}/zipconf.h
 %endif
 
 
@@ -94,6 +94,9 @@ cp -alf %{buildroot}%{_libdir}/libzip/include/zipconf.h \
 
 
 %changelog
+* Wed Sep 05 2012 Rex Dieter <rdieter@fedoraproject.org> 0.10.1-4
+- Warning about conflicting contexts for /usr/lib64/libzip/include/zipconf.h versus /usr/include/zipconf-64.h (#853954)
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.10.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 
