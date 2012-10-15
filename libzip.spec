@@ -3,7 +3,7 @@
 
 Name:    libzip
 Version: 0.10.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -67,7 +67,7 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
       %{buildroot}%{_includedir}/zipconf-%{__isa_bits}.h
 install -D -m644 -p %{SOURCE1} %{buildroot}%{_includedir}/zipconf.h
 %else
-ln -s ../%{_lib}/libzip/include/zipconf.h/libzip/include/zipconf.h \
+ln -s ../%{_lib}/libzip/include/zipconf.h \
       %{buildroot}%{_includedir}/zipconf.h
 %endif
 
@@ -94,6 +94,9 @@ ln -s ../%{_lib}/libzip/include/zipconf.h/libzip/include/zipconf.h \
 
 
 %changelog
+* Mon Oct 15 2012 Remi Collet <remi@fedoraproject.org> - 0.10.1-5
+- fix typo in multiarch (#866171)
+
 * Wed Sep 05 2012 Rex Dieter <rdieter@fedoraproject.org> 0.10.1-4
 - Warning about conflicting contexts for /usr/lib64/libzip/include/zipconf.h versus /usr/include/zipconf-64.h (#853954)
 
