@@ -3,7 +3,7 @@
 
 Name:    libzip
 Version: 0.11.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -76,7 +76,7 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
 %postun -p /sbin/ldconfig
 
 %files
-%doc AUTHORS NEWS README THANKS TODO
+%doc API-CHANGES AUTHORS LICENSE NEWS README THANKS TODO
 %{_bindir}/zipcmp
 %{_bindir}/zipmerge
 %{_bindir}/ziptorrent
@@ -94,6 +94,9 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
 
 
 %changelog
+* Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 0.11.1-2
+- include API-CHANGES and LICENSE in package doc
+
 * Wed Aug 21 2013 Remi Collet <remi@fedoraproject.org> - 0.11.1-1
 - update to 0.11.1
 
