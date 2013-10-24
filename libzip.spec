@@ -3,7 +3,7 @@
 
 Name:    libzip
 Version: 0.11.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -16,8 +16,9 @@ BuildRequires:  zlib-devel
 # to handle multiarch headers, ex from mysql-devel package
 Source1: zipconf.h
 
-# fonctionnal changes from php bundled library
-Patch0: libzip-0.11-php.patch
+# fix null deref in zip_fclose
+# http://hg.nih.at/libzip/rev/a2f3bb7896c0
+Patch0: libzip-0.11-deref.patch
 
 
 %description
@@ -37,7 +38,7 @@ developing applications that use %{name}.
 %prep
 %setup -q
 
-%patch0 -p1 -b .forphp
+%patch0 -p1 -b .deref
 
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
 %if "%{_libdir}" != "/usr/lib"
@@ -94,6 +95,9 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
 
 
 %changelog
+* Thu Oct 24 2013 Remi Collet <remi@fedoraproject.org> - 0.11.1-3
+- replace php patch with upstream one
+
 * Fri Aug 23 2013 Remi Collet <remi@fedoraproject.org> - 0.11.1-2
 - include API-CHANGES and LICENSE in package doc
 
