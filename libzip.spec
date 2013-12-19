@@ -2,8 +2,8 @@
 %define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 
 Name:    libzip
-Version: 0.11.1
-Release: 3%{?dist}
+Version: 0.11.2
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -15,10 +15,6 @@ BuildRequires:  zlib-devel
 
 # to handle multiarch headers, ex from mysql-devel package
 Source1: zipconf.h
-
-# fix null deref in zip_fclose
-# http://hg.nih.at/libzip/rev/a2f3bb7896c0
-Patch0: libzip-0.11-deref.patch
 
 
 %description
@@ -37,8 +33,6 @@ developing applications that use %{name}.
 
 %prep
 %setup -q
-
-%patch0 -p1 -b .deref
 
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
 %if "%{_libdir}" != "/usr/lib"
@@ -73,6 +67,10 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
 %endif
 
 
+%check
+make check
+
+
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
@@ -95,6 +93,10 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
 
 
 %changelog
+* Thu Dec 19 2013 Remi Collet <remi@fedoraproject.org> - 0.11.2-1
+- update to 0.11.2
+- run test during build
+
 * Thu Oct 24 2013 Remi Collet <remi@fedoraproject.org> - 0.11.1-3
 - replace php patch with upstream one
 
