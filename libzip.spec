@@ -3,7 +3,7 @@
 
 Name:    libzip
 Version: 0.11.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -36,7 +36,7 @@ developing applications that use %{name}.
 
 
 %prep
-%setup -q
+%autosetup -p1
 
 # Avoid lib64 rpaths (FIXME: recheck this on newer releases)
 %if "%{_libdir}" != "/usr/lib"
@@ -97,6 +97,9 @@ make check
 
 
 %changelog
+* Mon Mar 23 2015 Rex Dieter <rdieter@fedoraproject.org> 0.11.2-5
+- actually apply patch (using %%autosetup)
+
 * Mon Mar 23 2015 Rex Dieter <rdieter@fedoraproject.org> 0.11.2-4
 - CVE-2015-2331: integer overflow when processing ZIP archives (#1204676,#1204677)
 
