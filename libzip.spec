@@ -1,24 +1,32 @@
-
-%define multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
+%global multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
+%global with_tests     %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:    libzip
-Version: 0.11.2
-Release: 5%{?dist}
+Version: 1.0.1
+Release: 0%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
 URL:     http://www.nih.at/libzip/index.html
 Source0: http://www.nih.at/libzip/libzip-%{version}.tar.xz
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=1204677
-# http://hg.nih.at/libzip/raw-rev/9f11d54f692e
-Patch1: libzip-0.11.2-CVE-2015-2331.patch
-
-#BuildRequires:  automake libtool
-BuildRequires:  zlib-devel
-
 # to handle multiarch headers, ex from mysql-devel package
 Source1: zipconf.h
+
+BuildRequires:  zlib-devel
+# TODO remove this - Hack to not break buildroot
+BuildRequires:  libzip
+# Needed to run the test suite
+# find regress/ -type f | /usr/lib/rpm/perl.req
+BuildRequires:  perl
+BuildRequires:  perl(Cwd)
+BuildRequires:  perl(Data::Dumper)
+BuildRequires:  perl(File::Copy)
+BuildRequires:  perl(File::Path)
+BuildRequires:  perl(IPC::Open3)
+BuildRequires:  perl(Symbol)
+BuildRequires:  perl(UNIVERSAL)
+BuildRequires:  perl(strict)
+BuildRequires:  perl(warnings)
 
 
 %description
@@ -27,12 +35,24 @@ can be added from data buffers, files, or compressed data copied directly from
 other zip archives. Changes made without closing the archive can be reverted. 
 The API is documented by man pages.
 
+
 %package devel
-Summary: Development files for %{name}
+Summary:  Development files for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
+
 %description devel
 The %{name}-devel package contains libraries and header files for
 developing applications that use %{name}.
+
+
+%package tools
+Summary:  Command line tools from %{libname}
+Requires: %{name}%{?_isa} = %{version}-%{release}
+
+%description tools
+The %{name}-tools package provides command line tools split off %{name}:
+- zipcmp
+- zipmerge
 
 
 %prep
@@ -70,33 +90,54 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
       %{buildroot}%{_includedir}/zipconf.h
 %endif
 
+# TODO remove this - Hack to not break buildroot
+cp -p %{_libdir}/libzip.so.2.1.0 %{buildroot}%{_libdir}
+ln -s libzip.so.2.1.0 %{buildroot}%{_libdir}/libzip.so.2
+
 
 %check
+%if %{with_tests}
 make check
+%else
+: Test suite disabled
+%endif
 
 
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
+
 %files
-%doc API-CHANGES AUTHORS LICENSE NEWS README THANKS TODO
+%license LICENSE
+%{_libdir}/libzip.so.4*
+# TODO remove this - Hack to not break buildroot
+%{_libdir}/libzip.so.2*
+
+%files tools
 %{_bindir}/zipcmp
 %{_bindir}/zipmerge
-%{_bindir}/ziptorrent
-%{_libdir}/libzip.so.2*
-%{_mandir}/man1/*zip*
+%{_mandir}/man1/zip*
 
 %files devel
+%doc API-CHANGES AUTHORS NEWS README THANKS TODO
 %{_includedir}/zip.h
 %{_includedir}/zipconf*.h
 %dir %{_libdir}/libzip
 %{_libdir}/libzip/include
 %{_libdir}/libzip.so
 %{_libdir}/pkgconfig/libzip.pc
-%{_mandir}/man3/*zip*
+%{_mandir}/man3/libzip*
+%{_mandir}/man3/zip*
+%{_mandir}/man3/ZIP*
 
 
 %changelog
+* Tue May  5 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-1
+- update to 1.0.1
+- soname bump from .2 to .4
+- drop ziptorrent
+- create "tools" sub package
+
 * Mon Mar 23 2015 Rex Dieter <rdieter@fedoraproject.org> 0.11.2-5
 - actually apply patch (using %%autosetup)
 
