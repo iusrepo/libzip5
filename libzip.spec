@@ -3,7 +3,7 @@
 
 Name:    libzip
 Version: 1.0.1
-Release: 0%{?dist}
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -13,8 +13,6 @@ Source0: http://www.nih.at/libzip/libzip-%{version}.tar.xz
 Source1: zipconf.h
 
 BuildRequires:  zlib-devel
-# TODO remove this - Hack to not break buildroot
-BuildRequires:  libzip
 # Needed to run the test suite
 # find regress/ -type f | /usr/lib/rpm/perl.req
 BuildRequires:  perl
@@ -90,10 +88,6 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
       %{buildroot}%{_includedir}/zipconf.h
 %endif
 
-# TODO remove this - Hack to not break buildroot
-cp -p %{_libdir}/libzip.so.2.1.0 %{buildroot}%{_libdir}
-ln -s libzip.so.2.1.0 %{buildroot}%{_libdir}/libzip.so.2
-
 
 %check
 %if %{with_tests}
@@ -110,8 +104,6 @@ make check
 %files
 %license LICENSE
 %{_libdir}/libzip.so.4*
-# TODO remove this - Hack to not break buildroot
-%{_libdir}/libzip.so.2*
 
 %files tools
 %{_bindir}/zipcmp
