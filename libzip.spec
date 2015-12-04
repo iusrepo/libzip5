@@ -3,7 +3,7 @@
 
 Name:    libzip
 Version: 1.0.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -44,7 +44,7 @@ developing applications that use %{name}.
 
 
 %package tools
-Summary:  Command line tools from %{libname}
+Summary:  Command line tools from %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description tools
@@ -124,6 +124,9 @@ make check
 
 
 %changelog
+* Fri Dec  4 2015 Remi Collet <remi@fedoraproject.org> - 1.0.1-3
+- fix libzip-tools summary #1288424
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
