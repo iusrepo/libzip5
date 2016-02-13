@@ -2,8 +2,8 @@
 %global with_tests     %{?_without_tests:0}%{!?_without_tests:1}
 
 Name:    libzip
-Version: 1.1
-Release: 2%{?dist}
+Version: 1.1.1
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -11,9 +11,6 @@ URL:     http://www.nih.at/libzip/index.html
 Source0: http://www.nih.at/libzip/libzip-%{version}.tar.xz
 # to handle multiarch headers, ex from mysql-devel package
 Source1: zipconf.h
-
-# fix undefined optopt
-Patch0:  %{name}-build.patch
 
 BuildRequires:  zlib-devel
 # Needed to run the test suite
@@ -129,6 +126,9 @@ make check
 
 
 %changelog
+* Sat Feb 13 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
+- update to 1.1.1
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
