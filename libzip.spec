@@ -1,8 +1,8 @@
 %global multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
-%global with_tests     %{?_without_tests:0}%{!?_without_tests:1}
+%global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip
-Version: 1.1.1
+Version: 1.1.2
 Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
@@ -113,7 +113,7 @@ make check
 %{_mandir}/man1/zip*
 
 %files devel
-%doc API-CHANGES AUTHORS NEWS README THANKS TODO
+%doc API-CHANGES AUTHORS NEWS THANKS
 %{_includedir}/zip.h
 %{_includedir}/zipconf*.h
 %dir %{_libdir}/libzip
@@ -126,6 +126,9 @@ make check
 
 
 %changelog
+* Sat Feb 20 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
+- update to 1.1.2
+
 * Sat Feb 13 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
 
