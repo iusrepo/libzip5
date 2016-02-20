@@ -20,6 +20,7 @@ BuildRequires:  perl(Cwd)
 BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(File::Copy)
 BuildRequires:  perl(File::Path)
+BuildRequires:  perl(Getopt::Long)
 BuildRequires:  perl(IPC::Open3)
 BuildRequires:  perl(Symbol)
 BuildRequires:  perl(UNIVERSAL)
@@ -128,6 +129,7 @@ make check
 %changelog
 * Sat Feb 20 2016 Remi Collet <remi@fedoraproject.org> - 1.1.2-1
 - update to 1.1.2
+- add BR on perl(Getopt::Long)
 
 * Sat Feb 13 2016 Remi Collet <remi@fedoraproject.org> - 1.1.1-1
 - update to 1.1.1
