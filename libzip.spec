@@ -3,7 +3,7 @@
 
 Name:    libzip
 Version: 1.2.0
-Release: 0%{?dist}
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -18,6 +18,7 @@ Provides: bundled(gladman-fcrypt)
 BuildRequires:  zlib-devel
 # Needed to run the test suite
 # find regress/ -type f | /usr/lib/rpm/perl.req
+# find regress/ -type f | /usr/lib/rpm/perl.prov
 BuildRequires:  perl
 BuildRequires:  perl(Cwd)
 BuildRequires:  perl(Data::Dumper)
@@ -29,8 +30,6 @@ BuildRequires:  perl(Symbol)
 BuildRequires:  perl(UNIVERSAL)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
-# TODO remove this - Hack to not break buildroot
-BuildRequires:  libzip
 
 
 %description
@@ -95,9 +94,6 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
       %{buildroot}%{_includedir}/zipconf.h
 %endif
 
-# TODO remove this - Hack to not break buildroot
-cp -p %{_libdir}/libzip.so.4.0.0 %{buildroot}%{_libdir}
-ln -s libzip.so.4.0.0 %{buildroot}%{_libdir}/libzip.so.4
 
 %check
 %if %{with_tests}
@@ -114,8 +110,6 @@ make check
 %files
 %license LICENSE
 %{_libdir}/libzip.so.5*
-# TODO remove this - Hack to not break buildroot
-%{_libdir}/libzip.so.4*
 
 %files tools
 %{_bindir}/zipcmp
@@ -137,6 +131,10 @@ make check
 
 
 %changelog
+* Tue Feb 28 2017 Remi Collet <remi@fedoraproject.org> - 1.2.0-1
+- update to 1.2.0
+- soname bump to 5
+
 * Tue Feb 28 2017 Remi Collet <remi@fedoraproject.org> - 1.2.0-0
 - update to 1.2.0
 - soname bump to 5
