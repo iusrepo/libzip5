@@ -2,8 +2,8 @@
 %global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip
-Version: 1.1.3
-Release: 2%{?dist}
+Version: 1.2.0
+Release: 0%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -11,6 +11,9 @@ URL:     http://www.nih.at/libzip/index.html
 Source0: http://www.nih.at/libzip/libzip-%{version}.tar.xz
 # to handle multiarch headers, ex from mysql-devel package
 Source1: zipconf.h
+
+# specific AES crypto for WinZip compatibility
+Provides: bundled(gladman-fcrypt)
 
 BuildRequires:  zlib-devel
 # Needed to run the test suite
@@ -26,6 +29,8 @@ BuildRequires:  perl(Symbol)
 BuildRequires:  perl(UNIVERSAL)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
+# TODO remove this - Hack to not break buildroot
+BuildRequires:  libzip
 
 
 %description
@@ -90,6 +95,9 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
       %{buildroot}%{_includedir}/zipconf.h
 %endif
 
+# TODO remove this - Hack to not break buildroot
+cp -p %{_libdir}/libzip.so.4.0.0 %{buildroot}%{_libdir}
+ln -s libzip.so.4.0.0 %{buildroot}%{_libdir}/libzip.so.4
 
 %check
 %if %{with_tests}
@@ -105,6 +113,8 @@ make check
 
 %files
 %license LICENSE
+%{_libdir}/libzip.so.5*
+# TODO remove this - Hack to not break buildroot
 %{_libdir}/libzip.so.4*
 
 %files tools
@@ -127,6 +137,11 @@ make check
 
 
 %changelog
+* Tue Feb 28 2017 Remi Collet <remi@fedoraproject.org> - 1.2.0-0
+- update to 1.2.0
+- soname bump to 5
+- temporarily keep libzip.so.4
+
 * Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.1.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
