@@ -19,7 +19,7 @@ BuildRequires:  zlib-devel
 # Needed to run the test suite
 # find regress/ -type f | /usr/lib/rpm/perl.req
 # find regress/ -type f | /usr/lib/rpm/perl.prov
-BuildRequires:  perl
+BuildRequires:  perl-interpreter
 BuildRequires:  perl(Cwd)
 BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(File::Copy)
