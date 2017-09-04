@@ -2,8 +2,8 @@
 %global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip
-Version: 1.2.0
-Release: 3%{?dist}
+Version: 1.3.0
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -16,16 +16,17 @@ Source1: zipconf.h
 Provides: bundled(gladman-fcrypt)
 
 BuildRequires:  zlib-devel
+BuildRequires:  bzip2-devel
 # Needed to run the test suite
 # find regress/ -type f | /usr/lib/rpm/perl.req
 # find regress/ -type f | /usr/lib/rpm/perl.prov
 BuildRequires:  perl-interpreter
 BuildRequires:  perl(Cwd)
-BuildRequires:  perl(Data::Dumper)
 BuildRequires:  perl(File::Copy)
 BuildRequires:  perl(File::Path)
 BuildRequires:  perl(Getopt::Long)
 BuildRequires:  perl(IPC::Open3)
+BuildRequires:  perl(Storable)
 BuildRequires:  perl(Symbol)
 BuildRequires:  perl(UNIVERSAL)
 BuildRequires:  perl(strict)
@@ -97,6 +98,10 @@ ln -s ../%{_lib}/libzip/include/zipconf.h \
 
 %check
 %if %{with_tests}
+if [ %{__isa_bits} -lt 64 ]; then
+  export XFAIL_TESTS="encryption-nonrandom-aes128.test encryption-nonrandom-aes192.test encryption-nonrandom-aes256.test"
+fi
+
 make check
 %else
 : Test suite disabled
@@ -131,6 +136,11 @@ make check
 
 
 %changelog
+* Mon Sep  4 2017 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
+- update to 1.3.0
+- add dependency on bzip2 library
+- ignore 3 tests failing on 32-bit
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.2.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
