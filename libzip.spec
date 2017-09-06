@@ -1,16 +1,13 @@
-%global multilib_archs x86_64 %{ix86} ppc64 ppc s390x s390 sparc64 sparcv9
 %global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip
 Version: 1.3.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
 URL:     http://www.nih.at/libzip/index.html
 Source0: http://www.nih.at/libzip/libzip-%{version}.tar.xz
-# to handle multiarch headers, ex from mysql-devel package
-Source1: zipconf.h
 
 # specific AES crypto for WinZip compatibility
 Provides: bundled(gladman-fcrypt)
@@ -31,6 +28,7 @@ BuildRequires:  perl(Symbol)
 BuildRequires:  perl(UNIVERSAL)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
+BuildRequires:  multilib-rpm-config
 
 
 %description
@@ -86,14 +84,9 @@ rm -fv %{buildroot}%{_libdir}/lib*.la
 
 ## FIXME: someday fix consumers of libzip to properly handle
 ## header @ %%{_libdir}/libzip/include/zipconf.h -- rex
-%ifarch %{multilib_archs}
-ln -s ../%{_lib}/libzip/include/zipconf.h \
-      %{buildroot}%{_includedir}/zipconf-%{__isa_bits}.h
-install -D -m644 -p %{SOURCE1} %{buildroot}%{_includedir}/zipconf.h
-%else
 ln -s ../%{_lib}/libzip/include/zipconf.h \
       %{buildroot}%{_includedir}/zipconf.h
-%endif
+%multilib_fix_c_header --file %{_includedir}/zipconf.h
 
 
 %check
@@ -136,6 +129,9 @@ make check
 
 
 %changelog
+* Wed Sep 06 2017 Pavel Raiskup <praiskup@redhat.com> - 1.3.0-2
+- use multilib-rpm-config for multilib hacks
+
 * Mon Sep  4 2017 Remi Collet <remi@fedoraproject.org> - 1.3.0-1
 - update to 1.3.0
 - add dependency on bzip2 library
