@@ -1,13 +1,13 @@
 %global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip
-Version: 1.3.0
-Release: 2%{?dist}
+Version: 1.3.2
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
-URL:     http://www.nih.at/libzip/index.html
-Source0: http://www.nih.at/libzip/libzip-%{version}.tar.xz
+URL:     https://libzip.org/
+Source0: https://libzip.org/download/libzip-%{version}.tar.xz
 
 # specific AES crypto for WinZip compatibility
 Provides: bundled(gladman-fcrypt)
@@ -28,7 +28,6 @@ BuildRequires:  perl(Symbol)
 BuildRequires:  perl(UNIVERSAL)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
-BuildRequires:  multilib-rpm-config
 
 
 %description
@@ -76,25 +75,14 @@ make %{?_smp_mflags}
 
 
 %install
-
 make install DESTDIR=%{buildroot} INSTALL='install -p'
 
 ## unpackaged files
 rm -fv %{buildroot}%{_libdir}/lib*.la
 
-## FIXME: someday fix consumers of libzip to properly handle
-## header @ %%{_libdir}/libzip/include/zipconf.h -- rex
-ln -s ../%{_lib}/libzip/include/zipconf.h \
-      %{buildroot}%{_includedir}/zipconf.h
-%multilib_fix_c_header --file %{_includedir}/zipconf.h
-
 
 %check
 %if %{with_tests}
-if [ %{__isa_bits} -lt 64 ]; then
-  export XFAIL_TESTS="encryption-nonrandom-aes128.test encryption-nonrandom-aes192.test encryption-nonrandom-aes256.test"
-fi
-
 make check
 %else
 : Test suite disabled
@@ -119,8 +107,6 @@ make check
 %doc API-CHANGES AUTHORS THANKS *.md
 %{_includedir}/zip.h
 %{_includedir}/zipconf*.h
-%dir %{_libdir}/libzip
-%{_libdir}/libzip/include
 %{_libdir}/libzip.so
 %{_libdir}/pkgconfig/libzip.pc
 %{_mandir}/man3/libzip*
@@ -129,6 +115,12 @@ make check
 
 
 %changelog
+* Mon Nov 20 2017 Remi Collet <remi@remirepo.net> - 1.3.2-1
+- update to 1.3.2
+- drop multilib header hack
+- change URL to https://libzip.org/
+- test suite now ok on all arch
+
 * Wed Sep 06 2017 Pavel Raiskup <praiskup@redhat.com> - 1.3.0-2
 - use multilib-rpm-config for multilib hacks
 
