@@ -1,7 +1,7 @@
 %global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip
-Version: 1.3.2
+Version: 1.4.0
 Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
@@ -9,11 +9,17 @@ License: BSD
 URL:     https://libzip.org/
 Source0: https://libzip.org/download/libzip-%{version}.tar.xz
 
+# allow path customization (lib64)
+Patch0:  libzip-upstream.patch
+# drop RPATH from installed binaries
+Patch1:  libzip-rpath.patch
+
 # specific AES crypto for WinZip compatibility
 Provides: bundled(gladman-fcrypt)
 
 BuildRequires:  zlib-devel
 BuildRequires:  bzip2-devel
+BuildRequires:  cmake >= 3.0.2
 # Needed to run the test suite
 # find regress/ -type f | /usr/lib/rpm/perl.req
 # find regress/ -type f | /usr/lib/rpm/perl.prov
@@ -60,25 +66,18 @@ The %{name}-tools package provides command line tools split off %{name}:
 %prep
 %autosetup -p1
 
-# Avoid lib64 rpaths (FIXME: recheck this on newer releases)
-%if "%{_libdir}" != "/usr/lib"
-sed -i -e 's|"/lib /usr/lib|"/%{_lib} %{_libdir}|' configure
-#autoreconf -f -i
-%endif
+# unwanted in package documentation
+rm INSTALL.md
 
 
 %build
-%configure \
-  --disable-static
+%cmake .
 
 make %{?_smp_mflags}
 
 
 %install
 make install DESTDIR=%{buildroot} INSTALL='install -p'
-
-## unpackaged files
-rm -fv %{buildroot}%{_libdir}/lib*.la
 
 
 %check
@@ -104,7 +103,7 @@ make check
 %{_mandir}/man1/zip*
 
 %files devel
-%doc API-CHANGES AUTHORS THANKS *.md
+%doc AUTHORS THANKS *.md
 %{_includedir}/zip.h
 %{_includedir}/zipconf*.h
 %{_libdir}/libzip.so
@@ -115,6 +114,11 @@ make check
 
 
 %changelog
+* Sat Dec 30 2017 Remi Collet <remi@remirepo.net> - 1.4.0-1
+- update to 1.4.0
+- switch to cmake
+- add upstream patch for lib64
+
 * Mon Nov 20 2017 Remi Collet <remi@remirepo.net> - 1.3.2-1
 - update to 1.3.2
 - drop multilib header hack

@@ -1,0 +1,140 @@
+From 42a3c4a40b9925b8ef0fb8f38b200fdc9f6fe5a4 Mon Sep 17 00:00:00 2001
+From: Thomas Klausner <tk@giga.or.at>
+Date: Fri, 29 Dec 2017 22:29:37 +0100
+Subject: [PATCH] Use GNUInstallDirs variables to allow installation
+ customization.
+
+---
+ CMakeLists.txt     | 13 ++++++-------
+ lib/CMakeLists.txt |  8 ++++----
+ src/CMakeLists.txt |  6 +++---
+ 3 files changed, 13 insertions(+), 14 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 69cdb8b..b61f5ea 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,6 +1,5 @@
+ # TODO:
+-# 1. Problems generating html pages.
+-# 2. create usable libtool .la file
++# create usable libtool .la file
+ 
+ CMAKE_MINIMUM_REQUIRED(VERSION 3.0.2)
+ 
+@@ -141,7 +140,7 @@ endif(CMAKE_SYSTEM_NAME MATCHES WindowsPhone OR CMAKE_SYSTEM_NAME MATCHES Window
+ ADD_DEFINITIONS("-DHAVE_CONFIG_H")
+ 
+ # rpath handling: use rpath in installed binaries
+-SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
++SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+ 
+ # Testing
+@@ -157,8 +156,8 @@ ADD_SUBDIRECTORY(examples)
+ # pkgconfig file
+ SET(prefix ${CMAKE_INSTALL_PREFIX})
+ SET(exec_prefix \${prefix})
+-SET(libdir \${exec_prefix}/lib)
+-SET(includedir \${prefix}/include)
++SET(libdir \${exec_prefix}/${CMAKE_INSTALL_LIBDIR})
++SET(includedir \${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
+ IF(BZIP2_FOUND)
+   SET(LIBS "${LIBS} -lbz2")
+ ENDIF()
+@@ -167,7 +166,7 @@ IF(CMAKE_SYSTEM_NAME MATCHES BSD)
+   SET(PKG_CONFIG_RPATH "-Wl,-R\${libdir}")
+ ENDIF(CMAKE_SYSTEM_NAME MATCHES BSD)
+ CONFIGURE_FILE(libzip.pc.in libzip.pc @ONLY)
+-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libzip.pc DESTINATION lib/pkgconfig)
++INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libzip.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+ 
+ # write out config file
+ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/cmake-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+@@ -188,4 +187,4 @@ FILE(COPY ${CMAKE_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/runtest
+ 
+ # installation
+ 
+-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/zipconf.h DESTINATION include)
++INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/zipconf.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 855ccf5..ecbb45e 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -1,6 +1,6 @@
+ INCLUDE(CheckFunctionExists)
+ 
+-INSTALL(FILES zip.h DESTINATION include)
++INSTALL(FILES zip.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+ 
+ # from http://www.cmake.org/Wiki/CMakeMacroLibtoolFile
+ MACRO(GET_TARGET_PROPERTY_WITH_DEFAULT _variable _target _property _default_value)
+@@ -203,7 +203,7 @@ ADD_LIBRARY(zip ${LIBZIP_SOURCES} ${LIBZIP_EXTRA_FILES} ${LIBZIP_OPSYS_FILES})
+ SET_TARGET_PROPERTIES(zip PROPERTIES VERSION 5.0 SOVERSION 5)
+ TARGET_LINK_LIBRARIES(zip ${ZLIB_LIBRARY} ${OPTIONAL_LIBRARY})
+ INSTALL(TARGETS zip
+-  RUNTIME DESTINATION bin
+-  ARCHIVE DESTINATION lib
+-  LIBRARY DESTINATION lib)
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ #CREATE_LIBTOOL_FILE(zip lib)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 2a3f4d2..ccc8f7e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -8,12 +8,12 @@ ENDIF(NOT HAVE_GETOPT)
+ 
+ ADD_EXECUTABLE(zipcmp zipcmp.c ${SRC_EXTRA_FILES})
+ TARGET_LINK_LIBRARIES(zipcmp zip)
+-INSTALL(TARGETS zipcmp RUNTIME DESTINATION bin)
++INSTALL(TARGETS zipcmp RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+ ADD_EXECUTABLE(zipmerge zipmerge.c ${SRC_EXTRA_FILES})
+ TARGET_LINK_LIBRARIES(zipmerge zip)
+-INSTALL(TARGETS zipmerge RUNTIME DESTINATION bin)
++INSTALL(TARGETS zipmerge RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ 
+ ADD_EXECUTABLE(ziptool ziptool.c ${SRC_EXTRA_FILES})
+ TARGET_LINK_LIBRARIES(ziptool zip)
+-INSTALL(TARGETS ziptool RUNTIME DESTINATION bin)
++INSTALL(TARGETS ziptool RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+From 3a7497b791289e316aa794b7f2f1a95dd26ced26 Mon Sep 17 00:00:00 2001
+From: Thomas Klausner <tk@giga.or.at>
+Date: Fri, 29 Dec 2017 22:35:53 +0100
+Subject: [PATCH] Set bindir in pkgconfig file and use it.
+
+---
+ CMakeLists.txt | 1 +
+ libzip.pc.in   | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b61f5ea..3366b25 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -156,6 +156,7 @@ ADD_SUBDIRECTORY(examples)
+ # pkgconfig file
+ SET(prefix ${CMAKE_INSTALL_PREFIX})
+ SET(exec_prefix \${prefix})
++SET(bindir \${exec_prefix}/${CMAKE_INSTALL_BINDIR})
+ SET(libdir \${exec_prefix}/${CMAKE_INSTALL_LIBDIR})
+ SET(includedir \${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
+ IF(BZIP2_FOUND)
+diff --git a/libzip.pc.in b/libzip.pc.in
+index 53abc47..7be7f3e 100644
+--- a/libzip.pc.in
++++ b/libzip.pc.in
+@@ -1,9 +1,10 @@
+ prefix=@prefix@
+ exec_prefix=@exec_prefix@
++bindir=@bindir@
+ libdir=@libdir@
+ includedir=@includedir@
+ 
+-zipcmp=@prefix@/bin/zipcmp
++zipcmp=@bindir@/zipcmp
+ 
+ Name: libzip
+ Description: library for handling zip archives
