@@ -2,7 +2,7 @@
 
 Name:    libzip
 Version: 1.4.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -34,6 +34,7 @@ BuildRequires:  perl(Symbol)
 BuildRequires:  perl(UNIVERSAL)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
+BuildRequires:  multilib-rpm-config
 
 
 %description
@@ -79,6 +80,8 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot} INSTALL='install -p'
 
+%multilib_fix_c_header --file %{_includedir}/zipconf.h
+
 
 %check
 %if %{with_tests}
@@ -114,6 +117,9 @@ make check
 
 
 %changelog
+* Tue Jan  2 2018 Remi Collet <remi@remirepo.net> - 1.4.0-2
+- re-add multilib hack #1529886
+
 * Sat Dec 30 2017 Remi Collet <remi@remirepo.net> - 1.4.0-1
 - update to 1.4.0
 - switch to cmake
