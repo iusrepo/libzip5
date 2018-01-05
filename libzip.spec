@@ -2,7 +2,7 @@
 
 Name:    libzip
 Version: 1.4.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -13,6 +13,8 @@ Source0: https://libzip.org/download/libzip-%{version}.tar.xz
 Patch0:  libzip-upstream.patch
 # drop RPATH from installed binaries
 Patch1:  libzip-rpath.patch
+# fix multi-lib issue
+Patch2:  libzip-multilib.patch
 
 # specific AES crypto for WinZip compatibility
 Provides: bundled(gladman-fcrypt)
@@ -34,7 +36,6 @@ BuildRequires:  perl(Symbol)
 BuildRequires:  perl(UNIVERSAL)
 BuildRequires:  perl(strict)
 BuildRequires:  perl(warnings)
-BuildRequires:  multilib-rpm-config
 
 
 %description
@@ -80,8 +81,6 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot} INSTALL='install -p'
 
-%multilib_fix_c_header --file %{_includedir}/zipconf.h
-
 
 %check
 %if %{with_tests}
@@ -117,6 +116,9 @@ make check
 
 
 %changelog
+* Fri Jan  5 2018 Remi Collet <remi@remirepo.net> - 1.4.0-3
+- add upstream patch and drop multilib hack
+
 * Tue Jan  2 2018 Remi Collet <remi@remirepo.net> - 1.4.0-2
 - re-add multilib hack #1529886
 
