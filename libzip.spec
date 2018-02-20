@@ -2,7 +2,7 @@
 
 Name:    libzip
 Version: 1.4.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -19,6 +19,7 @@ Patch2:  libzip-multilib.patch
 # specific AES crypto for WinZip compatibility
 Provides: bundled(gladman-fcrypt)
 
+BuildRequires:  gcc
 BuildRequires:  zlib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  cmake >= 3.0.2
@@ -90,8 +91,7 @@ make check
 %endif
 
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%ldconfig_scriptlets
 
 
 %files
@@ -116,6 +116,10 @@ make check
 
 
 %changelog
+* Tue Feb 20 2018 Remi Collet <remi@remirepo.net> - 1.4.0-5
+- missing BR on C compiler
+- use ldconfig_scriptlets
+
 * Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.4.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
