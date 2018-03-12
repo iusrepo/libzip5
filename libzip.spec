@@ -1,27 +1,21 @@
 %global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip
-Version: 1.4.0
-Release: 5%{?dist}
+Version: 1.5.0
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
 URL:     https://libzip.org/
 Source0: https://libzip.org/download/libzip-%{version}.tar.xz
 
-# allow path customization (lib64)
-Patch0:  libzip-upstream.patch
 # drop RPATH from installed binaries
 Patch1:  libzip-rpath.patch
-# fix multi-lib issue
-Patch2:  libzip-multilib.patch
-
-# specific AES crypto for WinZip compatibility
-Provides: bundled(gladman-fcrypt)
 
 BuildRequires:  gcc
 BuildRequires:  zlib-devel
 BuildRequires:  bzip2-devel
+BuildRequires:  openssl-devel
 BuildRequires:  cmake >= 3.0.2
 # Needed to run the test suite
 # find regress/ -type f | /usr/lib/rpm/perl.req
@@ -116,6 +110,10 @@ make check
 
 
 %changelog
+* Mon Mar 12 2018 Remi Collet <remi@remirepo.net> - 1.5.0-1
+- update to 1.5.0
+- use openssl for cryptography instead of bundled custom AES implementation
+
 * Tue Feb 20 2018 Remi Collet <remi@remirepo.net> - 1.4.0-5
 - missing BR on C compiler
 - use ldconfig_scriptlets
