@@ -2,7 +2,7 @@
 
 Name:    libzip
 Version: 1.5.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -43,6 +43,9 @@ The API is documented by man pages.
 %package devel
 Summary:  Development files for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
+# referenced in libzip.pc
+Requires: zlib-devel%{?_isa}
+Requires: bzip2-devel%{?_isa}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
@@ -110,6 +113,9 @@ make check
 
 
 %changelog
+* Thu Mar 15 2018 Remi Collet <remi@remirepo.net> - 1.5.0-2
+- add dependency on zlib-devel and bzip2-devel #1556068
+
 * Mon Mar 12 2018 Remi Collet <remi@remirepo.net> - 1.5.0-1
 - update to 1.5.0
 - use openssl for cryptography instead of bundled custom AES implementation
