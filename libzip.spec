@@ -1,16 +1,13 @@
 %global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip
-Version: 1.5.0
-Release: 2%{?dist}
+Version: 1.5.1
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
 URL:     https://libzip.org/
 Source0: https://libzip.org/download/libzip-%{version}.tar.xz
-
-# drop RPATH from installed binaries
-Patch1:  libzip-rpath.patch
 
 BuildRequires:  gcc
 BuildRequires:  zlib-devel
@@ -43,9 +40,6 @@ The API is documented by man pages.
 %package devel
 Summary:  Development files for %{name}
 Requires: %{name}%{?_isa} = %{version}-%{release}
-# referenced in libzip.pc
-Requires: zlib-devel%{?_isa}
-Requires: bzip2-devel%{?_isa}
 
 %description devel
 The %{name}-devel package contains libraries and header files for
@@ -113,6 +107,12 @@ make check
 
 
 %changelog
+* Wed Apr 11 2018 Remi Collet <remi@remirepo.net> - 1.5.1-1
+- update to 1.5.1
+- drop dependency on zlib-devel and bzip2-devel no more
+  referenced in libzip.pc
+- drop rpath patch merged upstream
+
 * Thu Mar 15 2018 Remi Collet <remi@remirepo.net> - 1.5.0-2
 - add dependency on zlib-devel and bzip2-devel #1556068
 
