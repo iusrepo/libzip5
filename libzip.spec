@@ -2,7 +2,7 @@
 
 Name:    libzip
 Version: 1.5.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -107,6 +107,9 @@ make check
 
 
 %changelog
+* Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
