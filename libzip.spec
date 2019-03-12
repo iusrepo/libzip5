@@ -1,8 +1,8 @@
 %global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip
-Version: 1.5.1
-Release: 3%{?dist}
+Version: 1.5.2
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -65,7 +65,18 @@ rm INSTALL.md
 
 
 %build
-%cmake .
+%cmake \
+  -DENABLE_COMMONCRYPTO:BOOL=OFF \
+  -DENABLE_GNUTLS:BOOL=OFF \
+  -DENABLE_MBEDTLS:BOOL=OFF \
+  -DENABLE_OPENSSL:BOOL=ON \
+  -DENABLE_WINDOWS_CRYPTO:BOOL=OFF \
+  -DENABLE_BZIP2:BOOL=ON \
+  -DBUILD_TOOLS:BOOL=ON \
+  -DBUILD_REGRESS:BOOL=ON \
+  -DBUILD_EXAMPLES:BOOL=OFF \
+  -DBUILD_DOC:BOOL=ON \
+  .
 
 make %{?_smp_mflags}
 
@@ -107,6 +118,11 @@ make check
 
 
 %changelog
+* Tue Mar 12 2019 Remi Collet <remi@remirepo.net> - 1.5.2-1
+- update to 1.5.2
+- add all explicit cmake options to ensure openssl is used
+  even in local build with other lilbraries available
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
