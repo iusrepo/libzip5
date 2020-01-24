@@ -1,8 +1,8 @@
 %global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip
-Version: 1.5.2
-Release: 2%{?dist}
+Version: 1.6.0
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -13,6 +13,7 @@ BuildRequires:  gcc
 BuildRequires:  zlib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  openssl-devel
+BuildRequires:  xz-devel
 BuildRequires:  cmake >= 3.0.2
 # Needed to run the test suite
 # find regress/ -type f | /usr/lib/rpm/perl.req
@@ -72,6 +73,7 @@ rm INSTALL.md
   -DENABLE_OPENSSL:BOOL=ON \
   -DENABLE_WINDOWS_CRYPTO:BOOL=OFF \
   -DENABLE_BZIP2:BOOL=ON \
+  -DENABLE_LZMA:BOOL=ON \
   -DBUILD_TOOLS:BOOL=ON \
   -DBUILD_REGRESS:BOOL=ON \
   -DBUILD_EXAMPLES:BOOL=OFF \
@@ -118,6 +120,10 @@ make check
 
 
 %changelog
+* Fri Jan 24 2020 Remi Collet <remi@remirepo.net> - 1.6.0-1
+- update to 1.6.0
+- enable lzma support
+
 * Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.5.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
