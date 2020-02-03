@@ -1,8 +1,8 @@
 %global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip
-Version: 1.6.0
-Release: 2%{?dist}
+Version: 1.6.1
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -120,6 +120,9 @@ make check
 
 
 %changelog
+* Mon Feb  3 2020 Remi Collet <remi@remirepo.net> - 1.6.1-1
+- update to 1.6.1
+
 * Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 
