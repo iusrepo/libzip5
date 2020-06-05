@@ -1,0 +1,30 @@
+From ac7fb1e17a01ee0b93de6192c4dbe60e979f32d7 Mon Sep 17 00:00:00 2001
+From: Thomas Klausner <tk@giga.or.at>
+Date: Fri, 5 Jun 2020 15:59:05 +0200
+Subject: [PATCH 2/2] Fix previous, the macros are expected to be numbers.
+
+From Remi Collet.
+---
+ cmake-zipconf.h.in | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/cmake-zipconf.h.in b/cmake-zipconf.h.in
+index 053b8bb0..b88ed267 100644
+--- a/cmake-zipconf.h.in
++++ b/cmake-zipconf.h.in
+@@ -9,9 +9,9 @@
+  */
+ 
+ #define LIBZIP_VERSION "${libzip_VERSION}"
+-#define LIBZIP_VERSION_MAJOR "${libzip_VERSION_MAJOR}"
+-#define LIBZIP_VERSION_MINOR "${libzip_VERSION_MINOR}"
+-#define LIBZIP_VERSION_MICRO "${libzip_VERSION_PATCH}"
++#define LIBZIP_VERSION_MAJOR ${libzip_VERSION_MAJOR}
++#define LIBZIP_VERSION_MINOR ${libzip_VERSION_MINOR}
++#define LIBZIP_VERSION_MICRO ${libzip_VERSION_PATCH}
+ 
+ #cmakedefine ZIP_STATIC
+ 
+-- 
+2.25.4
+

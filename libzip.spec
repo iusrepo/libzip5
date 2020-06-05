@@ -1,13 +1,16 @@
 %global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip
-Version: 1.6.1
+Version: 1.7.0
 Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
 URL:     https://libzip.org/
 Source0: https://libzip.org/download/libzip-%{version}.tar.xz
+
+Patch0:  0001-Restore-LIBZIP_VERSION_-MAJOR-MINOR-MICRO.patch
+Patch1:  0002-Fix-previous-the-macros-are-expected-to-be-numbers.patch
 
 BuildRequires:  gcc
 BuildRequires:  zlib-devel
@@ -114,12 +117,17 @@ make check
 %{_includedir}/zipconf*.h
 %{_libdir}/libzip.so
 %{_libdir}/pkgconfig/libzip.pc
+%{_libdir}/cmake/libzip
 %{_mandir}/man3/libzip*
 %{_mandir}/man3/zip*
 %{_mandir}/man3/ZIP*
 
 
 %changelog
+* Fri Jun  5 2020 Remi Collet <remi@remirepo.net> - 1.7.0-1
+- update to 1.7.0
+- patch zipconf.h to re-add missing LIBZIP_VERSION_* macros
+
 * Mon Feb  3 2020 Remi Collet <remi@remirepo.net> - 1.6.1-1
 - update to 1.6.1
 
