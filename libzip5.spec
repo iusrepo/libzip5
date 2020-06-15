@@ -1,16 +1,13 @@
 %global with_tests     0%{!?_without_tests:1}
 
 Name:    libzip5
-Version: 1.7.0
-Release: 2%{?dist}
+Version: 1.7.1
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
 URL:     https://libzip.org/
 Source0: https://libzip.org/download/libzip-%{version}.tar.xz
-
-Patch0:  0001-Restore-LIBZIP_VERSION_-MAJOR-MINOR-MICRO.patch
-Patch1:  0002-Fix-previous-the-macros-are-expected-to-be-numbers.patch
 
 BuildRequires:  gcc
 BuildRequires:  zlib-devel
@@ -139,6 +136,9 @@ make check
 
 
 %changelog
+* Mon Jun 15 2020 Remi Collet <remi@remirepo.net> - 1.7.1-1
+- update to 1.7.1
+
 * Sat Jun 06 2020 Carl George <carl@george.computer> - 1.7.0-2
 - Initial libzip5 package based on Fedora's libzip
 
