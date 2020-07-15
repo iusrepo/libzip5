@@ -1,15 +1,13 @@
 %bcond_without tests
 
 Name:    libzip5
-Version: 1.7.2
+Version: 1.7.3
 Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
 URL:     https://libzip.org/
 Source0: https://libzip.org/download/libzip-%{version}.tar.xz
-
-Patch1:  https://github.com/nih-at/libzip/commit/ebe01b5c259fa28b4da24cc1c11ab24a31281b64.patch
 
 BuildRequires:  gcc
 BuildRequires:  zlib-devel
@@ -142,6 +140,10 @@ make check
 
 
 %changelog
+* Wed Jul 15 2020 Remi Collet <remi@remirepo.net> - 1.7.3-1
+- update to 1.7.3
+- drop patch merged upstream
+
 * Mon Jul 13 2020 Remi Collet <remi@remirepo.net> - 1.7.2-1
 - update to 1.7.2
 - fix installation layout using merged patch from
