@@ -2,7 +2,7 @@
 
 Name:    libzip5
 Version: 1.7.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -89,11 +89,11 @@ sed -e '/clone-fs-/d' \
   -DBUILD_DOC:BOOL=ON \
   .
 
-make %{?_smp_mflags}
+%cmake3_build
 
 
 %install
-make install DESTDIR=%{buildroot} INSTALL='install -p'
+%cmake3_install
 
 # rename tools for parallel installation
 mv %{buildroot}%{_bindir}/{,%{name}-}zipcmp
@@ -106,7 +106,7 @@ mv %{buildroot}%{_mandir}/man1/{,%{name}-}ziptool.1
 
 %check
 %if %{with tests}
-make check
+%ctest3
 %else
 : Test suite disabled
 %endif
@@ -140,6 +140,9 @@ make check
 
 
 %changelog
+* Tue Jul 21 2020 Rex Dieter <rdieter@fedoraproject.org> - 1.7.3-2
+- use %%cmake3_build, %%cmake3_install, %%ctest3
+
 * Wed Jul 15 2020 Remi Collet <remi@remirepo.net> - 1.7.3-1
 - update to 1.7.3
 - drop patch merged upstream
