@@ -1,8 +1,8 @@
 %bcond_without tests
 
 Name:    libzip5
-Version: 1.7.3
-Release: 2%{?dist}
+Version: 1.8.0
+Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
@@ -14,6 +14,7 @@ BuildRequires:  zlib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  openssl-devel
 BuildRequires:  xz-devel
+BuildRequires:  libzstd-devel
 BuildRequires:  cmake3 >= 3.0.2
 # Needed to run the test suite
 # find regress/ -type f | /usr/lib/rpm/perl.req
@@ -83,6 +84,7 @@ sed -e '/clone-fs-/d' \
   -DENABLE_WINDOWS_CRYPTO:BOOL=OFF \
   -DENABLE_BZIP2:BOOL=ON \
   -DENABLE_LZMA:BOOL=ON \
+  -DENABLE_ZSTD:BOOL=ON \
   -DBUILD_TOOLS:BOOL=ON \
   -DBUILD_REGRESS:BOOL=ON \
   -DBUILD_EXAMPLES:BOOL=OFF \
@@ -140,6 +142,10 @@ mv %{buildroot}%{_mandir}/man1/{,%{name}-}ziptool.1
 
 
 %changelog
+* Mon Jun 21 2021 Remi Collet <remi@remirepo.net> - 1.8.0-1
+- update to 1.8.0
+- enable zstd compression support
+
 * Tue Jul 21 2020 Rex Dieter <rdieter@fedoraproject.org> - 1.7.3-2
 - use %%cmake3_build, %%cmake3_install, %%ctest3
 
