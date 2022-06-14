@@ -1,7 +1,7 @@
 %bcond_without tests
 
 Name:    libzip5
-Version: 1.8.0
+Version: 1.9.0
 Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
@@ -14,7 +14,7 @@ BuildRequires:  zlib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  openssl-devel
 BuildRequires:  xz-devel
-BuildRequires:  libzstd-devel
+BuildRequires:  libzstd-devel >= 1.3.6
 BuildRequires:  cmake3 >= 3.0.2
 # Needed to run the test suite
 # find regress/ -type f | /usr/lib/rpm/perl.req
@@ -142,6 +142,9 @@ mv %{buildroot}%{_mandir}/man1/{,%{name}-}ziptool.1
 
 
 %changelog
+* Tue Jun 14 2022 Remi Collet <remi@remirepo.net> - 1.9.0-1
+- update to 1.9.0
+
 * Mon Jun 21 2021 Remi Collet <remi@remirepo.net> - 1.8.0-1
 - update to 1.8.0
 - enable zstd compression support
