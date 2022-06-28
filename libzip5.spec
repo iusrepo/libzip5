@@ -1,15 +1,13 @@
 %bcond_without tests
 
 Name:    libzip5
-Version: 1.9.1
+Version: 1.9.2
 Release: 1%{?dist}
 Summary: C library for reading, creating, and modifying zip archives
 
 License: BSD
 URL:     https://libzip.org/
 Source0: https://libzip.org/download/libzip-%{version}.tar.xz
-
-Patch0:  libzip-upstream.patch
 
 BuildRequires:  gcc
 BuildRequires:  zlib-devel
@@ -144,6 +142,9 @@ mv %{buildroot}%{_mandir}/man1/{,%{name}-}ziptool.1
 
 
 %changelog
+* Tue Jun 28 2022 Remi Collet <remi@remirepo.net> - 1.9.2-1
+- update to 1.9.2
+
 * Tue Jun 28 2022 Remi Collet <remi@remirepo.net> - 1.9.1-1
 - update to 1.9.1
 
